@@ -68,6 +68,7 @@ const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints:
     <>
       {points.map((point: Markers, index: number) => {
         const position = {lat: point.lat, lng: point.lng}
+
         return (
           <AdvancedMarker
             draggable={true}

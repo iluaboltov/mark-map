@@ -13,17 +13,11 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
   }
   const handleOnDelete = async (oldMarker: Markers) => {
     try {
-      const updatedList: (Markers | any )[]= markers.map((point) => {
-        if (point.id === oldMarker.id) {
-          return;
-        }
-        return point
-      })
-      setMarker(updatedList)
-      await deleteDoc(doc(db, "marks", oldMarker.name))
-
+      const updatedList: (Markers | any )[]= markers.filter((point) => point.id !== oldMarker.id);
+        await deleteDoc(doc(db, "marks", `Marker ${oldMarker.id}`))
+        setMarker(updatedList)
     } catch (e) {
-      throw new Error('Error during set marker')
+        throw new Error('Error during set marker')
     }
   }
 
@@ -43,9 +37,9 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
       id: markers.length+1,
       lat: lat,
       lng: lng,
-      name: `Mark ${markers.length+1}`,
+      name: `Marker ${markers.length+1}`,
     })
-    setMarker([...markers, {
+    setMarker((prevState)=>[...prevState, {
       id: markers.length+1,
       lat: lat!,
       lng: lng!,
@@ -54,7 +48,7 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
-      <ul className={'h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
+      <ul className={'max-h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
         {
           markers.map((marker, index) => {
             const position = { lat: marker.lat, lng: marker.lng }

@@ -1,18 +1,20 @@
 'use client'
 
-import { APIProvider, ControlPosition, Map, MapControl } from "@vis.gl/react-google-maps";
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { db } from "../../app/firebaseConfig";
 import { Markers } from "../../types/type";
 import MarkerMenu from "../marker-card/marker-menu";
 import MarkerCluster from "../marker-cluster/marker-cluster";
 import MarkerList from "../marker-list/marker-list";
-
 export default function MarkMap({points}: {points: Markers[]}) {
-  const [markers, setMarker] = useState<[] | Markers[]>(points)
+  const [markers, setMarker] = useState<[] | Markers[]>([])
   const [zoom, setZoom] = useState<number>(10)
+  useEffect(()=> {
+    setMarker(points)
+  }, [points])
   const handleMarker = async (lat: number, lng: number, id: number, index: number) => {
     try {
       const newMarker = markers[index]
@@ -21,14 +23,14 @@ export default function MarkMap({points}: {points: Markers[]}) {
 
       await deleteDoc(doc(db, "marks", newMarker.name))
 
-      await setDoc(doc(db, "marks", newMarker.name), {
+      await setDoc(doc(db, "marks", `Marker ${newMarker.id}`), {
       id: newMarker.id,
       lat: newMarker.lat,
       lng: newMarker.lng,
       name: newMarker.name,
       })
 
-      const updatedList = points.map((point) => {
+      const updatedList = markers.map((point) => {
         if (point.id === id) {
           return newMarker
         }
