@@ -3,9 +3,5 @@ import { getMarks } from "../db/firebase";
 
 export default async function Home() {
   const marks = await getMarks()
-  return(
-    <>
-      <MarkMap points={marks}/>
-    </>
-  )
+  return<MarkMap points={marks}/>
 }
