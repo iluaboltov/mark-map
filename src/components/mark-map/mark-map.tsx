@@ -12,7 +12,7 @@ import MarkerList from "../marker-list/marker-list";
 
 export default function MarkMap({points}: {points: Markers[]}) {
   const [markers, setMarker] = useState<Markers[]>(points)
-  const [zoom, setZoom] = useState<number | undefined>()
+  const [zoom, setZoom] = useState<number>(10)
   const handleMarker = async (lat: number, lng: number, id: number, index: number) => {
     try {
       const newMarker = markers[index]
@@ -50,19 +50,16 @@ export default function MarkMap({points}: {points: Markers[]}) {
           disableDefaultUI={true}
           gestureHandling={'greedy'}
           mapId={'main'}
-          onZoomChanged={(e)=>setZoom(e.map.getZoom())}
+          onZoomChanged={(e)=>setZoom(e.map.getZoom() ?? 10)}
           style={{height: '100vh', width: '100vw'}}
         >
 
-          <MarkerCluster points={markers} setPoints={handleMarker} zoom={zoom!}/>
+          <MarkerCluster points={markers} setPoints={handleMarker} zoom={zoom}/>
 
         </Map>
         <MarkerMenu>
           <MarkerList markers={markers} setMarker={setMarker}/>
         </MarkerMenu>
-        <MapControl position={ControlPosition.TOP_CENTER}>
-
-        </MapControl>
       </APIProvider>
     </div>
   )

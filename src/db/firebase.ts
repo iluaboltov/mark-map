@@ -12,6 +12,3 @@ export const getMarks = async () => {
     name: link.data().name
   }))
 }
-export const addMark = async () => {
-
-}
