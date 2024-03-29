@@ -50,7 +50,6 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
       lng: lng!,
       name: `Marker ${markers.length+1}`,
     }])
-    console.log(markers);
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>

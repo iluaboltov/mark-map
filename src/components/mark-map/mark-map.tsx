@@ -19,7 +19,6 @@ export default function MarkMap({points}: {points: Markers[]}) {
       newMarker.lat = lat;
       newMarker.lng = lng;
 
-      console.log(newMarker, 1111);
       await deleteDoc(doc(db, "marks", newMarker.name))
 
       await setDoc(doc(db, "marks", newMarker.name), {
