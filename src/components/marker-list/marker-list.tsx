@@ -48,7 +48,7 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
-      <ul className={'max-h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
+      <ul className={'h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
         {
           markers.map((marker, index) => {
             const position = { lat: marker.lat, lng: marker.lng }
