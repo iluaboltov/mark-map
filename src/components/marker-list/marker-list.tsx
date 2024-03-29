@@ -27,10 +27,11 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
     }
   }
 
-  const handleRemove = (markers: Markers[]) => {
+  const handleRemove = (markers: Markers[], setRemove: Dispatch<SetStateAction<[] | Markers[]>>) => {
       markers.forEach(async (marker) => {
-        await deleteDoc(doc(db, "marks", marker.name))
+        await deleteDoc(doc(db, "marks", `Marker ${marker.id}`))
       })
+      setRemove([])
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
@@ -71,7 +72,7 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
       </ul>
       <div className={'flex justify-around'}>
         <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={() => handleAdd(markers, setMarker)}>&#10004;</span>
-        <span className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={() => handleRemove(markers)}>&#10006;</span>
+        <span className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={() => handleRemove(markers, setMarker)}>&#10006;</span>
       </div>
     </div>
   )

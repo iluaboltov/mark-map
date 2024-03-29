@@ -11,7 +11,7 @@ import MarkerCluster from "../marker-cluster/marker-cluster";
 import MarkerList from "../marker-list/marker-list";
 
 export default function MarkMap({points}: {points: Markers[]}) {
-  const [markers, setMarker] = useState<Markers[]>(points)
+  const [markers, setMarker] = useState<[] | Markers[]>(points)
   const [zoom, setZoom] = useState<number>(10)
   const handleMarker = async (lat: number, lng: number, id: number, index: number) => {
     try {

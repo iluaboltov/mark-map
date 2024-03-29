@@ -52,8 +52,8 @@ const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints:
     }
   };
   const onPrevious = (index: number) => {
-    const lat = index-1 < 0 ? points[index-1].lat : points[0].lat
-    const lng = index-1 < 0 ? points[index-1].lng : points[0].lng
+    const lat = index-1 !== -1 ? points[index-1].lat : points[points.length-1].lat
+    const lng = index-1 !== -1 ? points[index-1].lng : points[points.length-1].lng
     const position = {lat, lng}
     map?.panTo(position)
   }
