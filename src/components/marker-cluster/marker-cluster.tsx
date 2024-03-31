@@ -4,13 +4,15 @@ import type {Marker} from '@googlemaps/markerclusterer';
 
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
-import { Markers } from "../../types/type";
+import { MarkerContextType, Markers } from "../../types/type";
+import { MarkersContext } from "../mark-map/mark-map";
 
-const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints: (lat: number, lng: number, id: number, index: number)=> void, zoom: number}) => {
+const MarkerCluster = ({setPoints}: {setPoints: (lat: number, lng: number, id: number, index: number)=> void}) => {
+  const { markers, zoom } = useContext(MarkersContext) as MarkerContextType;
   const map = useMap();
-  const [markers, setMarkers] = useState<{[key: string]: Marker}>({});
+  const [clusterMarker, setMarkers] = useState<{[key: string]: Marker}>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
 
   // Initialize MarkerClusterer
@@ -24,12 +26,12 @@ const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints:
   // Update markers
   useEffect(() => {
     clusterer.current?.clearMarkers();
-    clusterer.current?.addMarkers(Object.values(markers));
+    clusterer.current?.addMarkers(Object.values(clusterMarker));
   }, [zoom]);
 
   const setMarkerRef = (marker: Marker | null, key: string) => {
-    if (marker && markers[key]) return;
-    if (!marker && !markers[key]) return;
+    if (marker && clusterMarker[key]) return;
+    if (!marker && !clusterMarker[key]) return;
 
     setMarkers(prev => {
       if (marker) {
@@ -51,21 +53,21 @@ const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints:
     }
   };
   const onPrevious = (index: number) => {
-    const lat = index-1 !== -1 ? points[index-1].lat : points[points.length-1].lat
-    const lng = index-1 !== -1 ? points[index-1].lng : points[points.length-1].lng
+    const lat = index-1 !== -1 ? markers[index-1].lat : markers[markers.length-1].lat
+    const lng = index-1 !== -1 ? markers[index-1].lng : markers[markers.length-1].lng
     const position = {lat, lng}
     map?.panTo(position)
   }
 
   const onNext = (index: number) => {
-    const lat = index+1 > points.length-1 ? points[0].lat: points[index+1].lat;
-    const lng = index+1 > points.length-1 ? points[0].lng: points[index+1].lng;
+    const lat = index+1 > markers.length-1 ? markers[0].lat: markers[index+1].lat;
+    const lng = index+1 > markers.length-1 ? markers[0].lng: markers[index+1].lng;
     const position = {lat, lng}
     map?.panTo(position)
   }
   return (
     <>
-      {points.map((point: Markers, index: number) => {
+      {markers.map((point: Markers, index: number) => {
         const position = {lat: point.lat, lng: point.lng}
 
         return (
