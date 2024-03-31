@@ -45,7 +45,7 @@ export default function MarkMap({points}: {points: Markers[]}) {
 
   return(
     <div className={'relative'}>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY as string}>
+      <APIProvider apiKey={process.env.NEXT_PRIVATE_GOOGLE_MAPS_KEY as string}>
         <Map
           defaultCenter={{lat: 49.8414041, lng: 24.0285761}}
           defaultZoom={10}
