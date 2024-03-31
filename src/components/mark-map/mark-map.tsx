@@ -2,13 +2,16 @@
 
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 import { db } from "../../firebaseConfig";
-import { Markers } from "../../types/type";
+import { MarkerContextType, Markers } from "../../types/type";
 import MarkerMenu from "../marker-card/marker-menu";
 import MarkerCluster from "../marker-cluster/marker-cluster";
 import MarkerList from "../marker-list/marker-list";
+
+
+export const MarkersContext = createContext<MarkerContextType | null>(null)
 
 export default function MarkMap({points}: {points: Markers[]}) {
   const [markers, setMarker] = useState<[] | Markers[]>([])
@@ -47,24 +50,26 @@ export default function MarkMap({points}: {points: Markers[]}) {
 
   return(
     <div className={'relative'}>
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY as string}>
-        <Map
-          defaultCenter={{lat: 49.8414041, lng: 24.0285761}}
-          defaultZoom={10}
-          disableDefaultUI={true}
-          gestureHandling={'greedy'}
-          mapId={'main'}
-          onZoomChanged={(e)=>setZoom(e.map.getZoom() ?? 10)}
-          style={{height: '100vh', width: '100vw'}}
-        >
+      <MarkersContext.Provider value={{markers, zoom}}>
+        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY as string}>
+          <Map
+            defaultCenter={{lat: 49.8414041, lng: 24.0285761}}
+            defaultZoom={10}
+            disableDefaultUI={true}
+            gestureHandling={'greedy'}
+            mapId={'main'}
+            onZoomChanged={(e)=>setZoom(e.map.getZoom() ?? 10)}
+            style={{height: '100vh', width: '100vw'}}
+          >
 
-          <MarkerCluster points={markers} setPoints={handleMarker} zoom={zoom}/>
+            <MarkerCluster setPoints={handleMarker}/>
 
-        </Map>
-        <MarkerMenu>
-          <MarkerList markers={markers} setMarker={setMarker}/>
-        </MarkerMenu>
-      </APIProvider>
+          </Map>
+          <MarkerMenu>
+            <MarkerList setMarker={setMarker}/>
+          </MarkerMenu>
+        </APIProvider>
+      </MarkersContext.Provider>
     </div>
   )
 }

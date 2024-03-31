@@ -5,3 +5,8 @@ export type Markers = {
   lng: number,
   name: string,
 }
+
+export type MarkerContextType = {
+  markers: Markers[],
+  zoom: number
+}

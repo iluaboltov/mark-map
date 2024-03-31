@@ -1,11 +1,13 @@
 import { useMap } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
 import { db } from "../../firebaseConfig";
-import { Markers } from "../../types/type";
+import { MarkerContextType, Markers } from "../../types/type";
+import { MarkersContext } from "../mark-map/mark-map";
 
-const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {
+const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {
+  const { markers } = useContext(MarkersContext) as MarkerContextType;
   const map = useMap();
   const sortedMap = markers.sort( (firstArg, secondArg) => firstArg.id - secondArg.id)
   const handleOnClick = (position:  google.maps.LatLng | google.maps.LatLngLiteral) => {
