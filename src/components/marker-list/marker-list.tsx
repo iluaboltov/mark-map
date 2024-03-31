@@ -7,6 +7,7 @@ import { Markers } from "../../types/type";
 
 const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {
   const map = useMap();
+  const sortedMap = markers.sort( (firstArg, secondArg) => firstArg.id - secondArg.id)
   const handleOnClick = (position:  google.maps.LatLng | google.maps.LatLngLiteral) => {
     if(!map) return
     map.panTo(position)
@@ -50,7 +51,7 @@ const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispa
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
       <ul className={'h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
         {
-          markers.map((marker, index) => {
+          sortedMap.map((marker, index) => {
             const position = { lat: marker.lat, lng: marker.lng }
             return (
               <li className={"flex gap-2 w-full items-center bg-gray-600 hover:bg-gray-700 p-2 rounded-md text-md transition-colors ease-in-out cursor-zoom-in"} key={index}

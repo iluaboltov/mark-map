@@ -9,6 +9,7 @@ import { Markers } from "../../types/type";
 import MarkerMenu from "../marker-card/marker-menu";
 import MarkerCluster from "../marker-cluster/marker-cluster";
 import MarkerList from "../marker-list/marker-list";
+
 export default function MarkMap({points}: {points: Markers[]}) {
   const [markers, setMarker] = useState<[] | Markers[]>([])
   const [zoom, setZoom] = useState<number>(10)
@@ -21,6 +22,15 @@ export default function MarkMap({points}: {points: Markers[]}) {
       newMarker.lat = lat;
       newMarker.lng = lng;
 
+      const updatedList = markers.map((point) => {
+        if (point.id === id) {
+          return newMarker
+        }
+        return point
+      })
+
+      setMarker(updatedList)
+
       await deleteDoc(doc(db, "marks", `Marker ${newMarker.id}`))
 
       await setDoc(doc(db, "marks", `Marker ${newMarker.id}`), {
@@ -30,14 +40,6 @@ export default function MarkMap({points}: {points: Markers[]}) {
       name: newMarker.name,
       })
 
-      const updatedList = markers.map((point) => {
-        if (point.id === id) {
-          return newMarker
-        }
-        return point
-      })
-      setMarker(updatedList)
-
     } catch (e) {
       throw new Error('Error during set marker')
     }
@@ -45,7 +47,7 @@ export default function MarkMap({points}: {points: Markers[]}) {
 
   return(
     <div className={'relative'}>
-      <APIProvider apiKey={process.env.NEXT_PRIVATE_GOOGLE_MAPS_KEY as string}>
+      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY as string}>
         <Map
           defaultCenter={{lat: 49.8414041, lng: 24.0285761}}
           defaultZoom={10}
