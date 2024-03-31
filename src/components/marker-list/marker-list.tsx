@@ -32,22 +32,26 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
+    let currentLeng = markers.length === 0 ? 1 : markers.length+1;
     if(!map) return;
     const lat = map.getCenter()?.lat();
     const lng = map.getCenter()?.lng();
 
-    await setDoc(doc(db, "marks", `Marker ${markers.length+1}`), {
-      id: markers.length+1,
-      lat: lat,
-      lng: lng,
-      name: `Marker ${markers.length+1}`,
-    })
     setMarker((prevState)=>[...prevState, {
-      id: markers.length+1,
+      id: currentLeng,
       lat: lat!,
       lng: lng!,
-      name: `Marker ${markers.length+1}`,
+      name: `Marker ${currentLeng}`,
     }])
+    if (currentLeng == markers.length) {
+      currentLeng++
+    }
+    await setDoc(doc(db, "marks", `Marker ${currentLeng}`), {
+      id: currentLeng,
+      lat: lat,
+      lng: lng,
+      name: `Marker ${currentLeng}`,
+    })
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
@@ -68,8 +72,10 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
         }
       </ul>
       <div className={'flex justify-around'}>
-        <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={() => handleAdd(markers, setMarker)}>&#10004;</span>
-        <span className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={() => handleRemove(markers, setMarker)}>&#10006;</span>
+        <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={async () => await handleAdd(markers, setMarker)}>&#10004;</span>
+        {!!markers.length ? <span
+          className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
+          onClick={() => handleRemove(markers, setMarker)}>&#10006;</span>: null}
       </div>
     </div>
   )
