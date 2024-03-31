@@ -2,7 +2,7 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
 
-import { db } from "../../app/firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { Markers } from "../../types/type";
 
 const MarkerList = ({markers, setMarker}: {markers: Markers[], setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {

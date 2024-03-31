@@ -4,7 +4,7 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-import { db } from "../../app/firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { Markers } from "../../types/type";
 import MarkerMenu from "../marker-card/marker-menu";
 import MarkerCluster from "../marker-cluster/marker-cluster";
@@ -21,7 +21,7 @@ export default function MarkMap({points}: {points: Markers[]}) {
       newMarker.lat = lat;
       newMarker.lng = lng;
 
-      await deleteDoc(doc(db, "marks", newMarker.name))
+      await deleteDoc(doc(db, "marks", `Marker ${newMarker.id}`))
 
       await setDoc(doc(db, "marks", `Marker ${newMarker.id}`), {
       id: newMarker.id,

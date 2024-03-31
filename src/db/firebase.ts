@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 
-import { db } from "../app/firebaseConfig";
+import { db } from "../firebaseConfig";
 
 export const getMarks = async () => {
 

@@ -48,7 +48,6 @@ const MarkerCluster = ({points, setPoints, zoom}: {points: Markers[], setPoints:
       const lng = latLng.lng();
 
       setPoints(lat, lng, id, index)
-
     }
   };
   const onPrevious = (index: number) => {
