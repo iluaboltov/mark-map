@@ -57,7 +57,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
   return (
       <div className={`flex flex-col justify-center gap-2 w-36 h-60 flex-1 animate-fadeOut`}>
-        {!isOpened ?
+        {isOpened ?
           <div
             className={"flex self-end mr-4 justify-center items-center text-xl cursor-pointer bg-[#4285F4] rounded-full w-8 h-8"}
             onClick={() => setOpened(!isOpened)}>
