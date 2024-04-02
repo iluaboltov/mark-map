@@ -34,7 +34,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
-    let lastId = (marks[marks.length-1].id + 1) ?? 1
+    let lastId = (marks[marks?.length-1]?.id ?? 0) + 1
     if(!map) return;
     const lat = map.getCenter()?.lat();
     const lng = map.getCenter()?.lng();
