@@ -57,7 +57,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
   return (
       <div className={`flex flex-col justify-center gap-2 w-36 h-60 flex-1 animate-fadeOut`}>
-        {isOpened ?
+        {!isOpened ?
           <div
             className={"flex self-end mr-4 justify-center items-center text-xl cursor-pointer bg-[#4285F4] rounded-full w-8 h-8"}
             onClick={() => setOpened(!isOpened)}>
@@ -68,7 +68,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
             onClick={() => setOpened(!isOpened)}>
             &#187;
           </div>}
-        <ul className={`h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2 transition-all duration-200 ${isOpened ? 'opacity-100' : 'opacity-0'}`}>
+        <ul className={`h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2 transition-all duration-200 ${!isOpened ? 'opacity-100' : 'opacity-0'}`}>
           {
             sortedMap.map((marker, index) => {
               const position = { lat: marker.lat, lng: marker.lng }
@@ -87,7 +87,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
             })
           }
         </ul>
-        <div className={`flex justify-around items-center transition-all duration-200 ${isOpened ? "opacity-100" : "opacity-0"}`}>
+        <div className={`flex justify-around items-center transition-all duration-200 ${!isOpened ? "opacity-100" : "opacity-0"}`}>
         <span
           className={'text-xl flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
           onClick={async () => {
