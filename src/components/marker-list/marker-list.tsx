@@ -34,23 +34,25 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
-    let lastId = (marks[marks?.length-1]?.id ?? 0) + 1
+    const latsMarkId = marks[marks?.length-1]?.id ?? 0
+    console.log(latsMarkId);
+    const newId = latsMarkId + 1
     if(!map) return;
     const lat = map.getCenter()?.lat();
     const lng = map.getCenter()?.lng();
 
     setMarker((prevState)=>[...prevState, {
-      id: lastId,
+      id: newId,
       lat: lat!,
       lng: lng!,
-      name: `Marker ${lastId}`,
+      name: `Marker ${newId}`,
     }])
 
-    await setDoc(doc(db, "marks", `Marker ${lastId}`), {
-      id: lastId,
+    await setDoc(doc(db, "marks", `Marker ${newId}`), {
+      id: newId,
       lat: lat,
       lng: lng,
-      name: `Marker ${lastId}`,
+      name: `Marker ${newId}`,
     })
   }
   return(
