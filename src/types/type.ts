@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 
 export type Markers = {
   id: number,
@@ -7,6 +8,6 @@ export type Markers = {
 }
 
 export type MarkerContextType = {
-  markers: Markers[],
-  zoom: number
+  marks: [] | Markers[],
+  setMarks:  Dispatch<SetStateAction<[] | Markers[]>>
 }

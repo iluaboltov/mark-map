@@ -88,6 +88,9 @@ devDependencies:
   typescript:
     specifier: ^5
     version: 5.4.3
+  uuid:
+    specifier: ^9.0.1
+    version: 9.0.1
 
 packages:
 

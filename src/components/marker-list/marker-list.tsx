@@ -1,3 +1,5 @@
+"use client"
+
 import { useMap } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { Dispatch, SetStateAction, useContext } from "react";
@@ -7,16 +9,16 @@ import { MarkerContextType, Markers } from "../../types/type";
 import { MarkersContext } from "../mark-map/mark-map";
 
 const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {
-  const { markers } = useContext(MarkersContext) as MarkerContextType;
+  const { marks } = useContext(MarkersContext) as MarkerContextType;
   const map = useMap();
-  const sortedMap = markers.sort( (firstArg, secondArg) => firstArg.id - secondArg.id)
+  const sortedMap = marks.sort( (firstArg, secondArg) => firstArg.id - secondArg.id)
   const handleOnClick = (position:  google.maps.LatLng | google.maps.LatLngLiteral) => {
     if(!map) return
     map.panTo(position)
   }
   const handleOnDelete = async (oldMarker: Markers) => {
     try {
-      const updatedList: (Markers | any )[]= markers.filter((point) => point.id !== oldMarker.id);
+      const updatedList: (Markers | any )[]= marks.filter((point) => point.id !== oldMarker.id);
         await deleteDoc(doc(db, "marks", `Marker ${oldMarker.id}`))
         setMarker(updatedList)
     } catch (e) {
@@ -25,10 +27,10 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
 
   const handleRemove = (markers: Markers[], setRemove: Dispatch<SetStateAction<[] | Markers[]>>) => {
-      markers.forEach(async (marker) => {
+    setRemove([])
+    markers.forEach(async (marker) => {
         await deleteDoc(doc(db, "marks", `Marker ${marker.id}`))
-      })
-      setRemove([])
+    })
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
@@ -37,12 +39,20 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
     const lat = map.getCenter()?.lat();
     const lng = map.getCenter()?.lng();
 
+    console.log(setMarker((prevState)=>[...prevState, {
+      id: currentLeng,
+      lat: lat!,
+      lng: lng!,
+      name: `Marker ${currentLeng}`,
+    }]));
+
     setMarker((prevState)=>[...prevState, {
       id: currentLeng,
       lat: lat!,
       lng: lng!,
       name: `Marker ${currentLeng}`,
     }])
+
     if (currentLeng == markers.length) {
       currentLeng++
     }
@@ -52,6 +62,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
       lng: lng,
       name: `Marker ${currentLeng}`,
     })
+    console.log(2);
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
@@ -72,10 +83,15 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
         }
       </ul>
       <div className={'flex justify-around'}>
-        <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'} onClick={async () => await handleAdd(markers, setMarker)}>&#10004;</span>
-        {!!markers.length ? <span
+        <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
+              onClick={async () => {
+                await handleAdd(marks, setMarker)
+              }}>
+          &#10004;
+        </span>
+        {!!marks.length ? <span
           className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
-          onClick={() => handleRemove(markers, setMarker)}>&#10006;</span>: null}
+          onClick={() => handleRemove(marks, setMarker)}>&#10006;</span>: null}
       </div>
     </div>
   )

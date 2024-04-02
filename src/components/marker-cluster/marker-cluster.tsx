@@ -9,8 +9,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { MarkerContextType, Markers } from "../../types/type";
 import { MarkersContext } from "../mark-map/mark-map";
 
-const MarkerCluster = ({setPoints}: {setPoints: (lat: number, lng: number, id: number, index: number)=> void}) => {
-  const { markers, zoom } = useContext(MarkersContext) as MarkerContextType;
+const MarkerCluster = ({setPoints, zoom}: {setPoints: (lat: number, lng: number, id: number, index: number)=> void, zoom: number}) => {
+  const { marks } = useContext(MarkersContext) as MarkerContextType;
   const map = useMap();
   const [clusterMarker, setMarkers] = useState<{[key: string]: Marker}>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
@@ -41,8 +41,8 @@ const MarkerCluster = ({setPoints}: {setPoints: (lat: number, lng: number, id: n
         delete newMarkers[key];
         return newMarkers;
       }
-    });
-  };
+    })
+  }
   const onMarkerDragEnd = (e:google.maps.MapMouseEvent, id: number, index: number) => {
     const { latLng } = e;
     if (latLng) {
@@ -53,21 +53,21 @@ const MarkerCluster = ({setPoints}: {setPoints: (lat: number, lng: number, id: n
     }
   };
   const onPrevious = (index: number) => {
-    const lat = index-1 !== -1 ? markers[index-1].lat : markers[markers.length-1].lat
-    const lng = index-1 !== -1 ? markers[index-1].lng : markers[markers.length-1].lng
+    const lat = index-1 !== -1 ? marks[index-1].lat : marks[marks.length-1].lat
+    const lng = index-1 !== -1 ? marks[index-1].lng : marks[marks.length-1].lng
     const position = {lat, lng}
     map?.panTo(position)
   }
 
   const onNext = (index: number) => {
-    const lat = index+1 > markers.length-1 ? markers[0].lat: markers[index+1].lat;
-    const lng = index+1 > markers.length-1 ? markers[0].lng: markers[index+1].lng;
+    const lat = index+1 > marks.length-1 ? marks[0].lat: marks[index+1].lat;
+    const lng = index+1 > marks.length-1 ? marks[0].lng: marks[index+1].lng;
     const position = {lat, lng}
     map?.panTo(position)
   }
   return (
     <>
-      {markers.map((point: Markers, index: number) => {
+      { !!marks && marks.map((point: Markers, index) => {
         const position = {lat: point.lat, lng: point.lng}
 
         return (
@@ -76,7 +76,7 @@ const MarkerCluster = ({setPoints}: {setPoints: (lat: number, lng: number, id: n
             key={index}
             onDragEnd={(e) => onMarkerDragEnd(e, point.id, index)}
             position={position}
-            ref={marker => setMarkerRef(marker, `${point.id}`)}
+            ref={marker => setMarkerRef(marker, `${index}`)}
           >
             <div className={'flex flex-col text-xl justify-center items-center p-2 min-h-8 bg-gray-600 rounded-md text-md'}>
               <div className={'flex gap-2 items-center font-extrabold'}>
