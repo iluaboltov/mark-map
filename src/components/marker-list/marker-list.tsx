@@ -35,7 +35,6 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
     const latsMarkId = marks[marks?.length-1]?.id ?? 0
-    console.log(latsMarkId);
     const newId = latsMarkId + 1
     if(!map) return;
     const lat = map.getCenter()?.lat();
