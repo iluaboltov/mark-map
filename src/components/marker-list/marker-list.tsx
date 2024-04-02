@@ -34,35 +34,24 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
   }
 
   const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
-    let currentLeng = markers.length === 0 ? 1 : markers.length+1;
+    let lastId = marks[marks.length-1].id + 1
     if(!map) return;
     const lat = map.getCenter()?.lat();
     const lng = map.getCenter()?.lng();
 
-    console.log(setMarker((prevState)=>[...prevState, {
-      id: currentLeng,
-      lat: lat!,
-      lng: lng!,
-      name: `Marker ${currentLeng}`,
-    }]));
-
     setMarker((prevState)=>[...prevState, {
-      id: currentLeng,
+      id: lastId,
       lat: lat!,
       lng: lng!,
-      name: `Marker ${currentLeng}`,
+      name: `Marker ${lastId}`,
     }])
 
-    if (currentLeng == markers.length) {
-      currentLeng++
-    }
-    await setDoc(doc(db, "marks", `Marker ${currentLeng}`), {
-      id: currentLeng,
+    await setDoc(doc(db, "marks", `Marker ${lastId}`), {
+      id: lastId,
       lat: lat,
       lng: lng,
-      name: `Marker ${currentLeng}`,
+      name: `Marker ${lastId}`,
     })
-    console.log(2);
   }
   return(
     <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
