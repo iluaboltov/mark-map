@@ -2,7 +2,7 @@
 
 import { useMap } from "@vis.gl/react-google-maps";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 
 import { db } from "../../firebaseConfig";
 import { MarkerContextType, Markers } from "../../types/type";
@@ -11,6 +11,7 @@ import { MarkersContext } from "../mark-map/mark-map";
 const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>>}) => {
   const { marks } = useContext(MarkersContext) as MarkerContextType;
   const map = useMap();
+  const [isOpened, setOpened] = useState(true)
   const sortedMap = marks.sort( (firstArg, secondArg) => firstArg.id - secondArg.id)
   const handleOnClick = (position:  google.maps.LatLng | google.maps.LatLngLiteral) => {
     if(!map) return
@@ -33,7 +34,7 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
     })
   }
 
-  const handleAdd = async (markers: Markers[], setMarker: Dispatch<SetStateAction<Markers[]>>) => {
+  const handleAdd = async (setMarker: Dispatch<SetStateAction<Markers[]>>) => {
     const latsMarkId = marks[marks?.length-1]?.id ?? 0
     const newId = latsMarkId + 1
     if(!map) return;
@@ -54,36 +55,54 @@ const MarkerList = ({setMarker}: {setMarker:  Dispatch<SetStateAction<Markers[]>
       name: `Marker ${newId}`,
     })
   }
-  return(
-    <div className={'flex flex-col justify-center gap-2 w-36 flex-1'}>
-      <ul className={'h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2'}>
-        {
-          sortedMap.map((marker, index) => {
-            const position = { lat: marker.lat, lng: marker.lng }
-            return (
-              <li className={"flex gap-2 w-full items-center bg-gray-600 hover:bg-gray-700 p-2 rounded-md text-md transition-colors ease-in-out cursor-zoom-in"} key={index}
+  return (
+      <div className={`flex flex-col justify-center gap-2 w-36 h-60 flex-1 animate-fadeOut`}>
+        {!isOpened ?
+          <div
+            className={"flex self-end mr-4 justify-center items-center text-xl cursor-pointer bg-[#4285F4] rounded-full w-8 h-8"}
+            onClick={() => setOpened(!isOpened)}>
+            &#171;
+          </div> :
+          <div
+            className={"flex self-end mr-4 justify-center items-center text-xl cursor-pointer bg-[#4285F4] rounded-full w-8 h-8"}
+            onClick={() => setOpened(!isOpened)}>
+            &#187;
+          </div>}
+        <ul className={`h-40 overflow-x-hidden overflow-y-auto flex flex-col items-center gap-2 transition-all duration-200 ${isOpened ? 'opacity-100' : 'opacity-0'}`}>
+          {
+            sortedMap.map((marker, index) => {
+              const position = { lat: marker.lat, lng: marker.lng }
+              return (
+                <li
+                  className={"flex gap-2 justify-center w-full items-center bg-[#4285F4] hover:bg-gray-700 p-2 rounded-md text-md transition-colors ease-in-out cursor-zoom-in"}
+                  key={index}
                   onClick={() => handleOnClick(position)}>
-                <span>{marker.name}</span>
-                <span className={"text-red-500 hover:text-red-600 transition-colors ease-in-out cursor-pointer"} onClick={() => {
-                  handleOnDelete(marker)
-                }}>&#10006;</span>
-              </li>
-            )
-          })
-        }
-      </ul>
-      <div className={'flex justify-around'}>
-        <span className={'flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
-              onClick={async () => {
-                await handleAdd(marks, setMarker)
-              }}>
-          &#10004;
+                  <span>{marker.name}</span>
+                  <span className={"text-red-500 hover:text-red-600 transition-colors ease-in-out cursor-pointer"}
+                        onClick={() => {
+                          handleOnDelete(marker)
+                        }}>&#10006;</span>
+                </li>
+              )
+            })
+          }
+        </ul>
+        <div className={`flex justify-around items-center transition-all duration-200 ${isOpened ? "opacity-100" : "opacity-0"}`}>
+        <span
+          className={'text-xl flex justify-center items-center bg-green-600 hover:bg-green-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
+          onClick={async () => {
+            await handleAdd(setMarker)
+          }}>
+          &#43;
         </span>
-        {!!marks.length ? <span
-          className={'flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
-          onClick={() => handleRemove(marks, setMarker)}>&#10006;</span>: null}
+          {!!marks.length ?
+            <span
+              className={'text-xl flex justify-center items-center bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 transition-colors ease-in-out cursor-pointer'}
+              onClick={() => handleRemove(marks, setMarker)}>
+            &#8722;
+        </span> : null}
+        </div>
       </div>
-    </div>
   )
 }
 export default MarkerList;

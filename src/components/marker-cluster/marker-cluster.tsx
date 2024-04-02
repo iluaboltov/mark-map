@@ -78,19 +78,15 @@ const MarkerCluster = ({setPoints, zoom}: {setPoints: (lat: number, lng: number,
             position={position}
             ref={marker => setMarkerRef(marker, `${index}`)}
           >
-            <div className={'flex flex-col text-xl justify-center items-center p-2 min-h-8 bg-gray-600 rounded-md text-md'}>
+            <div className={'relative flex flex-col text-md justify-center items-center p-2 min-h-8 bg-[#4285F4] rounded-[8px] text-md'}>
               <div className={'flex gap-2 items-center font-extrabold'}>
-                <span>
-                  &#33;
-                </span>
                 <span>
                   {point.name}
                 </span>
               </div>
-              <div className={'flex w-full justify-between'}>
-                <span className={'rounded-full bg-orange-500 h-5 w-5 flex items-center justify-center'} onClick={()=> onPrevious(index)}>&#706;</span>
-                <span className={'rounded-full bg-orange-500 h-5 w-5 flex items-center justify-center'} onClick={()=> onNext(index)}>&#707;</span>
-              </div>
+              <span className={'absolute top-full left-1/2 -translate-x-1/2 border-t-[8px] border-[#4285F4] border-r-[8px] border-r-transparent border-l-[8px] border-l-transparent'}></span>
+              <span className={'absolute top-1/2 -translate-y-1/2 -left-6 rounded-full bg-orange-500 h-5 w-5 flex items-center justify-center'} onClick={()=> onPrevious(index)}>&#706;</span>
+              <span className={'absolute top-1/2 -translate-y-1/2 -right-6 rounded-full bg-orange-500 h-5 w-5 flex items-center justify-center'} onClick={()=> onNext(index)}>&#707;</span>
             </div>
           </AdvancedMarker>
         )
